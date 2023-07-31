@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Client;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\Product;
 
 class HomeController extends Controller
 {
@@ -11,9 +13,10 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    protected $product;
+    public function __construct(Product $product)
     {
-        $this->middleware('auth');
+        $this->product = $product;
     }
 
     /**
@@ -23,6 +26,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $products = $this->product->latest('id')->paginate(12);
+        return view('client.home.index', compact('products'));
     }
+
 }
